@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Pathfinder : MonoBehaviour {
 
@@ -10,17 +11,6 @@ public class Pathfinder : MonoBehaviour {
 	
 	private Vector2Int mGridSize = new Vector2Int(400, 400);
 	private Dictionary<Vector2Int, Node> mGrid;
-
-	void OnDrawGizmos() {
-		Gizmos.DrawWireCube(transform.position, General.ToVector3(mGridSize));
-		// if(mGrid != null) {
-		// 	foreach(KeyValuePair<Vector2Int, Node> entry in mGrid) {
-		// 		if(!entry.Value.walkable) Gizmos.color = Color.red;
-		// 		else Gizmos.color = Color.white;
-		// 		Gizmos.DrawWireCube(entry.Value.worldPosition, Vector2.one);
-		// 	}
-		// }
-	}
 
 	private int gridTotalSize {
 		get {
@@ -53,8 +43,8 @@ public class Pathfinder : MonoBehaviour {
 
 	List<Node> FindNeighbours(Node node) {
 		List<Node> neighbours = new List<Node>();
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
+		for (int x = -node.size.x; x <= node.size.x; x += node.size.x) {
+			for (int y = -node.size.y; y <= node.size.y; y += node.size.y) {
 				if(x == 0 && y == 0) continue;
 
 				Vector2Int p = new Vector2Int(node.position.x + x, node.position.y + y);
@@ -91,13 +81,14 @@ public class Pathfinder : MonoBehaviour {
 		Node startNode = NodeFromPosition(startPos);
 		Node targetNode = NodeFromPosition(targetPos);
 
-		Heap<Node> openSet = new Heap<Node>(gridTotalSize);
-		HashSet<Node> closedSet = new HashSet<Node>();
+		if(startNode == targetNode) return new List<Node>( new Node[] { targetNode } );
+		if(!startNode.walkable) return null;
+		if(!targetNode.walkable) return null;
 
 		// Add the first node to the set
+		Heap<Node> openSet = new Heap<Node>(gridTotalSize);
+		HashSet<Node> closedSet = new HashSet<Node>();
 		openSet.Add(startNode);
-
-		if(startNode == targetNode) return new List<Node>( new Node[] { targetNode } );
 
 		// While open set is not empty
 		while(openSet.Count != 0) {
@@ -107,7 +98,7 @@ public class Pathfinder : MonoBehaviour {
 
 			// Found the path
 			if(currentNode == targetNode) {
-				return FindPath(startNode, targetNode);
+				return ReversePath(startNode, targetNode);
 			}
 
 			// Loop thru all the neighours
@@ -129,12 +120,118 @@ public class Pathfinder : MonoBehaviour {
 					}
 				}
 			}
+
 		}
 
+		// Add
+		// Heap<Node> openSetReversed = new Heap<Node>(gridTotalSize);
+		// HashSet<Node> closedSetReversed = new HashSet<Node>();
+		// openSetReversed.Add(targetNode);
+
+		// while(openSet.Count != 0 && openSetReversed.Count != 0) {
+		// 	UnityEditor.EditorApplication.isPaused = true;
+		// 	Node node = FindNode(targetNode, openSet, closedSet);
+
+		// 	Node nodeRev = FindNode(startNode, openSetReversed, closedSetReversed);
+
+		// 	if(openSetReversed.Contains(node)) {
+		// 		Debug.Log("ACHOU");
+		// 		return null;
+		// 	} else if(openSet.Contains(nodeRev)) {
+		// 		Debug.Log("ACHOU");
+		// 		return null;
+		// 	} else if(node == targetNode) {
+		// 		Debug.Log("ACHOU");
+		// 		return null;
+		// 	} else if(nodeRev == startNode) {
+		// 		Debug.Log("ACHOU");
+		// 		return null;
+		// 	}
+		// }
+
+		Debug.Log("NAO ACHOU");
 		return null;
 	}
 
-	List<Node> FindPath(Node startNode, Node targetNode) {
+	Vector2 mStartPosAsync;
+	Vector2 mTargetPosAsync;
+	Action<List<Node>> mCallbackAsync;
+
+	public void FindPathAsync(Vector2 startPos, Vector2 targetPos, Action<List<Node>> callback) {
+		mStartPosAsync = startPos;
+		mTargetPosAsync = targetPos;
+		mCallbackAsync = callback;
+
+		StartCoroutine(FindPathCoroutine());
+	}
+
+	IEnumerator FindPathCoroutine() {
+		Node startNode = NodeFromPosition(mStartPosAsync);
+		Node targetNode = NodeFromPosition(mTargetPosAsync);
+
+		if(startNode == targetNode) {
+			mCallbackAsync(new List<Node>( new Node[] { targetNode } ));
+			yield break;
+		}
+		if(!startNode.walkable) {
+			mCallbackAsync(null);
+			yield break;
+		}
+		if(!targetNode.walkable) {
+			mCallbackAsync(null);
+			yield break;
+		}
+		// Add the first node to the set
+		Heap<Node> openSet = new Heap<Node>(gridTotalSize);
+		HashSet<Node> closedSet = new HashSet<Node>();
+		openSet.Add(startNode);
+
+		float lastTime;
+
+		// While open set is not empty
+		while(openSet.Count != 0) {
+			lastTime = Time.time;
+			Node currentNode = openSet.RemoveFirst();
+
+			closedSet.Add(currentNode);
+
+			// Found the path
+			if(currentNode == targetNode) {
+				List<Node> path = ReversePath(startNode, targetNode);
+				mCallbackAsync(path);
+				yield break;
+			}
+
+			// Loop thru all the neighours
+			List<Node> neighbours = FindNeighbours(currentNode);
+			foreach (Node neighbour in neighbours) {
+
+				if(!neighbour.walkable || closedSet.Contains(neighbour)) continue;
+				
+				int newCost = currentNode.gCost + GetDistance(currentNode, neighbour);
+				if(newCost < neighbour.gCost || !openSet.Contains(neighbour)) {
+					neighbour.gCost = newCost;
+					neighbour.hCost = GetDistance(neighbour, targetNode);
+					neighbour.parent = currentNode;
+
+					if(!openSet.Contains(neighbour)) {
+						openSet.Add(neighbour);
+					} else {
+						openSet.UpdateItem(neighbour);
+					}
+				}
+			}	
+			if(Time.time - lastTime > .05f) {
+				lastTime = Time.time;
+				yield return null;
+			}
+		}
+
+		mCallbackAsync(null);
+		yield break;
+	}
+
+	List<Node> ReversePath(Node startNode, Node targetNode) {
 		// Recreates the path from the target to the start node
 		List<Node> path = new List<Node>();
 		Node cNode = targetNode;
@@ -146,5 +243,16 @@ public class Pathfinder : MonoBehaviour {
 
 		return path;
 	}
+
+	// void OnDrawGizmos() {
+	// 	Gizmos.DrawWireCube(transform.position, General.ToVector3(mGridSize));
+	// 	if(mGrid != null) {
+	// 		foreach(KeyValuePair<Vector2Int, Node> entry in mGrid) {
+	// 			if(!entry.Value.walkable) Gizmos.color = Color.red;
+	// 			else Gizmos.color = Color.white;
+	// 			Gizmos.DrawWireCube(entry.Value.worldPosition, General.ToVector3(entry.Value.size));
+	// 		}
+	// 	}
+	// }
 
 }

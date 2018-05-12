@@ -42,8 +42,7 @@ public class Task {
 	}
 
 	void CreateID() {
-		id = iLastID;
-		iLastID = (iLastID + 1) % 10000;
+		id = iLastID++;
 	}
 
 	public override string ToString() {

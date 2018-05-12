@@ -6,7 +6,7 @@ public class Tree : MonoBehaviour {
 
 	[SerializeField]
 	private Item mWoodLog;
-	private int mLogCount = 3;
+	private int mLogCount = 10;
 
 	void Start () {
 		

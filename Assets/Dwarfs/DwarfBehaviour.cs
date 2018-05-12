@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
 
 public class DwarfBehaviour : MonoBehaviour {
 
@@ -13,6 +14,7 @@ public class DwarfBehaviour : MonoBehaviour {
 	private Queue<Task> mTaskQueue;
 	private Task mCurrentTask;
 	private List<Node> mCurrentPath;
+	private bool mIsFindingPath;
 	private List<int> mTasksBlackList;
 
 	public Task activeTask {
@@ -50,18 +52,35 @@ public class DwarfBehaviour : MonoBehaviour {
 	}
 	
 	void Update () {
+		if(mIsFindingPath) {
+			return;
+		}
+
 		// If there's no active task
 		if(mCurrentTask == null) {
 			// If there's active task to be done
 			if(mTaskQueue.Count > 0 || mGameController.taskList.Count > 0) {
 				// Get the next task
 				mCurrentTask = GetNextTask();
-				if(mCurrentTask != null) mCurrentPath = Pathfinder.main.FindPath(transform.position, mCurrentTask.targetPosition);
+				// if(mCurrentTask != null) mCurrentPath = Pathfinder.main.FindPath(transform.position, mCurrentTask.targetPosition);
+				if(mCurrentTask != null) {
+					mIsFindingPath = true;
+					Pathfinder.main.FindPathAsync(transform.position, mCurrentTask.targetPosition, (path) => {
+						mIsFindingPath = false;
+						mCurrentPath = path;
+						if(path == null) HUDController.main.CreateFloatingText("Not possible here", mCurrentTask.targetPosition, Color.red);
+					});
+				}
+				return;
 			}
 			return;
 		}
-
-		if(mCurrentPath == null || mCurrentPath.Count == 0) {
+		
+		if(mCurrentPath == null) {
+			mCurrentTask = null;
+			return;
+		}
+		if(mCurrentPath.Count == 0) {
 			PerformTask();
 			return;
 		}
@@ -84,7 +103,7 @@ public class DwarfBehaviour : MonoBehaviour {
 		}
 	}
 
-	public void DispatchTask(Task task) {
+	public void EnqueueTask(Task task) {
 		if(!CheckTask(task)) {
 			HUDController.main.CreateFloatingText("Not possible", task.targetPosition, Color.red);
 			return;
@@ -97,7 +116,7 @@ public class DwarfBehaviour : MonoBehaviour {
 		task.Start();
 	}
 
-	public void ClearAndDispatchTask(Task task) {
+	public void ClearAndEnqueueTask(Task task) {
 		if(!CheckTask(task)) return;
 
 		ClearTasks();		
@@ -117,8 +136,7 @@ public class DwarfBehaviour : MonoBehaviour {
 		}
 
 		mCurrentTask.Perform(mInventory);
-		mCurrentTask = GetNextTask();
-		if(mCurrentTask != null) mCurrentPath = Pathfinder.main.FindPath(transform.position, mCurrentTask.targetPosition);
+		mCurrentTask = null;
 	}
 
 	bool CheckTask(Task task) {

@@ -633,7 +633,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: a9bdb86a-2d3f-4e4f-9a34-ef3b7b731f26
   projectName: surv_unity
   organizationId: macrok

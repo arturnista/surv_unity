@@ -74,7 +74,7 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			if(GameController.main.activeBuilding != null) {
 				Vector3Int mousePosInt = new Vector3Int(Mathf.RoundToInt(mousePos.x), Mathf.RoundToInt(mousePos.y), 0);
 				Task constructTask = new Task(Task.Action.ConstructBuilding, mousePosInt, GameController.main.activeBuilding);
-				DispatchTask(constructTask);
+				EnqueueTask(constructTask);
 				return;
 			}
 
@@ -94,7 +94,7 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 			// If clicked with the right button, perfom the first action
 			HUDController.main.CloseActionCanvas();
-			DispatchTask(mTasks[0]);
+			EnqueueTask(mTasks[0]);
 		
 		}
     }
@@ -116,11 +116,11 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			return;
 		}
 
-		DispatchTask(mTasks[index]);
+		EnqueueTask(mTasks[index]);
 	}
 	
-	void DispatchTask(Task task) {
-		if(!mShouldResetQueue) GameController.main.DispatchTask(task);
-		else GameController.main.ClearAndDispatchTask(task);
+	void EnqueueTask(Task task) {
+		if(!mShouldResetQueue) GameController.main.EnqueueTask(task);
+		else GameController.main.ClearAndEnqueueTask(task);
 	}
 }

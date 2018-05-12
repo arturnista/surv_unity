@@ -70,20 +70,20 @@ public class GameController : MonoBehaviour {
 		mPathRenderer.SetPositions(pos.ToArray());
 	}
 
-	public void DispatchTask(Task task) {
+	public void EnqueueTask(Task task) {
 		if(dwarf) {
-			dwarf.DispatchTask(task);
+			dwarf.EnqueueTask(task);
 		} else {
 			HUDController.main.CreateFloatingText(Task.ActionToString(task.action), task.targetPosition, Color.white);
-
+			
 			mTaskList.Add(task);
-			task.Start();			
+			task.Start();
 		}
 	}
 
-	public void ClearAndDispatchTask(Task task) {
+	public void ClearAndEnqueueTask(Task task) {
 		if(dwarf) {
-			dwarf.ClearAndDispatchTask(task);
+			dwarf.ClearAndEnqueueTask(task);
 		} else {
 			ClearTasks();
 			mTaskList.Add(task);

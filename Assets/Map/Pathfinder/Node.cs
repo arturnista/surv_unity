@@ -31,7 +31,8 @@ public class Node : IHeapItem<Node> {
 		}
 	}
 
-	private Vector2 mSize;
+	public Vector2Int size;
+	private Vector2 mHalfSize;
 
 	public int CompareTo(Node a) {
 		int compare = fCost.CompareTo(a.fCost);
@@ -48,11 +49,12 @@ public class Node : IHeapItem<Node> {
 		this.position = new Vector2Int(x, y);
         this.mPathfinderMask = pathfinderMask;
         this.RefreshWalkable();
-		mSize = Vector2.one / 2f;
+		size = Vector2Int.one;
+		mHalfSize = General.ToVector2(size) / 2f;
 	}
 
     public void RefreshWalkable() {
-		Collider2D collider = Physics2D.OverlapBox(this.position, mSize, 0f, mPathfinderMask);
+		Collider2D collider = Physics2D.OverlapBox(this.position, mHalfSize, 0f, mPathfinderMask);
 		this.walkable = collider == null;
     }
 

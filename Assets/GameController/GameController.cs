@@ -74,7 +74,7 @@ public class GameController : MonoBehaviour {
 		if(dwarf) {
 			dwarf.EnqueueTask(task);
 		} else {
-			HUDController.main.CreateFloatingText(Task.ActionToString(task.action), task.targetPosition, Color.white);
+			HUDController.main.CreateFloatingText(task.ToStringFormat(), task.position, Color.white);
 			
 			mTaskList.Add(task);
 			task.Start();

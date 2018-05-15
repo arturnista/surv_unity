@@ -21,13 +21,13 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		mTasks = new List<Task>();
 
 		Tree tree = GetComponent<Tree>();
-		if(tree) mTasks.Add( new Task(Task.Action.CutTree, gameObject) );
+		if(tree) mTasks.Add( new CutTreeTask(gameObject) );
 		
 		GameItem item = GetComponent<GameItem>();
-		if(item) mTasks.Add( new Task(Task.Action.PickUpItem, gameObject) );	
+		if(item) mTasks.Add( new PickUpItemTask(gameObject) );	
 
 		mGameArea = GetComponent<GameArea>();
-		mTasks.Add( new Task(Task.Action.Move, gameObject) );
+		mTasks.Add( new MoveTask(Vector3.zero) );
 		mMoveActionIndex = mTasks.Count - 1;
 
 		mShouldResetQueue = false;
@@ -73,20 +73,20 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			// If the game area has an active building, must construct it
 			if(GameController.main.activeBuilding != null) {
 				Vector3Int mousePosInt = new Vector3Int(Mathf.RoundToInt(mousePos.x), Mathf.RoundToInt(mousePos.y), 0);
-				Task constructTask = new Task(Task.Action.ConstructBuilding, mousePosInt, GameController.main.activeBuilding);
+				Task constructTask = new ConstructBuildingTask(mousePosInt, GameController.main.activeBuilding);
 				EnqueueTask(constructTask);
 				return;
 			}
 
 			// Create the move task based on where the player clicked
-			mTasks[mMoveActionIndex] = new Task(Task.Action.Move, mousePos);
+			mTasks[mMoveActionIndex] = new MoveTask(mousePos);
 		}
 
 		if (eventData.button == PointerEventData.InputButton.Left) {
 		
 			// Create the list of actions to perform
 			List<string> act = new List<string>();
-			foreach (Task t in mTasks) act.Add(Task.ActionToString(t.action));
+			foreach (Task t in mTasks) act.Add(t.ToStringFormat(true));
 			// act.Add("Select all");
 			HUDController.main.OpenActionCanvas(Input.mousePosition, act, SelectAction);
 

@@ -62,13 +62,13 @@ public class DwarfBehaviour : MonoBehaviour {
 			if(mTaskQueue.Count > 0 || mGameController.taskList.Count > 0) {
 				// Get the next task
 				mCurrentTask = GetNextTask();
-				// if(mCurrentTask != null) mCurrentPath = Pathfinder.main.FindPath(transform.position, mCurrentTask.targetPosition);
+				// if(mCurrentTask != null) mCurrentPath = Pathfinder.main.FindPath(transform.position, mCurrentTask.position);
 				if(mCurrentTask != null) {
 					mIsFindingPath = true;
-					Pathfinder.main.FindPathAsync(transform.position, mCurrentTask.targetPosition, (path) => {
+					Pathfinder.main.FindPathAsync(transform.position, mCurrentTask.position, (path) => {
 						mIsFindingPath = false;
 						mCurrentPath = path;
-						if(path == null) HUDController.main.CreateFloatingText("Not possible here", mCurrentTask.targetPosition, Color.red);
+						if(path == null) HUDController.main.CreateFloatingText("Not possible here", mCurrentTask.position, Color.red);
 					});
 				}
 				return;
@@ -88,7 +88,7 @@ public class DwarfBehaviour : MonoBehaviour {
 		Node node = mCurrentPath[0];
 
 		if(node == null) {
-			HUDController.main.CreateFloatingText("Not possible to " + Task.ActionToString(mCurrentTask.action), mCurrentTask.targetPosition, Color.red);
+			HUDController.main.CreateFloatingText("Not possible to " + mCurrentTask.ToStringFormat(), mCurrentTask.position, Color.red);
 			mCurrentTask.Cancel();
 
 			mCurrentTask = null;
@@ -105,11 +105,11 @@ public class DwarfBehaviour : MonoBehaviour {
 
 	public void EnqueueTask(Task task) {
 		if(!CheckTask(task)) {
-			HUDController.main.CreateFloatingText("Not possible", task.targetPosition, Color.red);
+			HUDController.main.CreateFloatingText("Not possible", task.position, Color.red);
 			return;
 		}
 
-		HUDController.main.CreateFloatingText(Task.ActionToString(task.action), task.targetPosition, Color.white);
+		HUDController.main.CreateFloatingText(task.ToStringFormat(), task.position, Color.white);
 
 		mTaskQueue.Enqueue(task);
 
@@ -130,7 +130,7 @@ public class DwarfBehaviour : MonoBehaviour {
 			mCurrentTask = null;
 			return;
 		}
-		if(Vector2.Distance(transform.position, mCurrentTask.targetPosition) > 1f) {
+		if(Vector2.Distance(transform.position, mCurrentTask.position) > 1f) {
 			mCurrentTask = null;
 			return;
 		}
@@ -141,7 +141,7 @@ public class DwarfBehaviour : MonoBehaviour {
 
 	bool CheckTask(Task task) {
 		if(!task.Check(mInventory)) return false;
-		Node node = Pathfinder.main.FindNextNode(transform.position, task.targetPosition);		
+		Node node = Pathfinder.main.FindNextNode(transform.position, task.position);		
 
 		if(node == null) return false;
 		return true;

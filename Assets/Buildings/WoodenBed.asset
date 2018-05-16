@@ -15,7 +15,7 @@ MonoBehaviour:
   size: {x: 1, y: 2}
   sprite: {fileID: 21300000, guid: 6a927896f31af48e28d9f25d4a409c04, type: 3}
   buildTime: 1
-  prefab: {fileID: 1234430175329752, guid: 1404a26a8d72b406e80d5e618b0bb88f, type: 2}
+  prefab: {fileID: 1205869573924306, guid: 17f92a85a2aad4826b9de76eff98ba7e, type: 2}
   ghostPrefab: {fileID: 1234430175329752, guid: 7c7728ddee331473cbeeb4431f29256a,
     type: 2}
   actions: 00000000

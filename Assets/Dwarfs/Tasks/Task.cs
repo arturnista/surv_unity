@@ -8,6 +8,7 @@ public class Task {
 		PickUpItem,
 		Construct,
 		Deconstruct,
+		Sleep,
 	}
 
 	protected static int iLastID = 0;

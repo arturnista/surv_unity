@@ -23,6 +23,7 @@ public class DwarfStatus : MonoBehaviour {
 	}
 
 	private float mIdleHardness;
+	private bool mIsSleeping;
 
 	private DwarfBehaviour mBehaviour;
 
@@ -39,12 +40,28 @@ public class DwarfStatus : MonoBehaviour {
 	
 	void Update () {
 		
-		if(mBehaviour.activeTask != null) {
+		if(mIsSleeping) {
+			mFatigue += mIdleHardness * Time.deltaTime;			
+		} else if(mBehaviour.activeTask != null) {
 			mFatigue -= mBehaviour.activeTask.hardness * Time.deltaTime;
 		} else {
 			mFatigue -= mIdleHardness * Time.deltaTime;
 		}
+		
+		if(mBehaviour.activeTask != null) {
+			mHungry -= mBehaviour.activeTask.hardness * Time.deltaTime;
+		} else {
+			mHungry -= mIdleHardness * Time.deltaTime;
+		}
 
+	}
+
+	public void StartSleep() {
+		mIsSleeping = true;
+	}
+
+	public void StopSleep() {
+		mIsSleeping = false;
 	}
 
 

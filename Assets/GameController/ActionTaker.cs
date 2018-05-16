@@ -26,6 +26,9 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		GameItem item = GetComponent<GameItem>();
 		if(item) mTasks.Add( new PickUpItemTask(gameObject) );	
 		
+		Bed bed = GetComponent<Bed>();
+		if(bed) mTasks.Add( new SleepTask(gameObject) );	
+		
 		GameBuilding building = GetComponent<GameBuilding>();
 		if(building) mTasks.Add( new DeconstructTask(gameObject) );	
 

@@ -46,9 +46,9 @@ public class HUDController : MonoBehaviour {
 		mDebugText.text = "";
 		
 		if(GameController.main.dwarf != null) {
-			mDebugText.text += " Health: " + GameController.main.dwarf.status.health;
-			mDebugText.text += " Hungry: " + GameController.main.dwarf.status.hungry;
-			mDebugText.text += " Fatigue: " + GameController.main.dwarf.status.fatigue;
+			mDebugText.text += " Health: " + Mathf.Round( GameController.main.dwarf.status.health );
+			mDebugText.text += " Hungry: " + Mathf.Round( GameController.main.dwarf.status.hungry );
+			mDebugText.text += " Fatigue: " + Mathf.Round( GameController.main.dwarf.status.fatigue );
 		}
 	}
 

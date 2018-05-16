@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class ConstructBuildingTask : Task {
+public class ConstructTask : Task {
 
 	public Building building;
 	protected GameBuilding mBuildingGhost;
 	
-	public ConstructBuildingTask(Vector3 position, Building building) : base(Task.Action.ConstructBuilding) {
+	public ConstructTask(Vector3 position, Building building) : base(Task.Action.Construct) {
 		this.position = position;
         this.building = building;
 	}
 
 	public override string ToString() {
-		return "ConstructBuilding :: " + building.name + " :: " + this.position;
+		return "Construct :: " + building.name + " :: " + this.position;
 	}
 
 	public override string ToStringFormat(bool simple = false) {
@@ -34,12 +34,22 @@ public class ConstructBuildingTask : Task {
 		mBuildingGhost = building.CreateGhost(this.position);
 	}
 
-	public override void Perform(DwarfInventory inventory) {
+	public override void Perform(DwarfInventory inventory, System.Action onFinish) {
+		base.Perform(inventory, onFinish);
+		this.hardness = 3f;
+		
+		// Invoke("FinishPerfom", this.building.buildTime);
+		FinishPerform();
+	}
+	
+	protected override void FinishPerform() {
         building.DestroyGhost(mBuildingGhost);
         building.CreateGameObject(position);
         foreach(Building.Requirement req in building.requirements) {
-            inventory.RemoveItem(req.item, req.amount);
+            mDwarfInventory.RemoveItem(req.item, req.amount);
         }
+
+		mOnFinishCallback();
 	}
 
 	public override void Cancel() {

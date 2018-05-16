@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CutTreeTask : Task {
@@ -7,6 +9,8 @@ public class CutTreeTask : Task {
 	public CutTreeTask(GameObject target) : base(Task.Action.CutTree) {
 		this.target = target;
 		this.position = target.transform.position;
+		this.hardness = 1f;
+
 		mTree = target.GetComponent<Tree>();
 	}
 
@@ -31,8 +35,20 @@ public class CutTreeTask : Task {
 
 	}
 
-	public override void Perform(DwarfInventory inventory) {
-		mTree.Cut();
+	public override void Perform(DwarfInventory inventory, System.Action onFinish) {
+		base.Perform(inventory, onFinish);
+		this.hardness = 2f;
+
+		FinishPerform();
+	}
+	
+	protected override void FinishPerform() {
+		List<GameItem> itemsCreated = mTree.Cut();
+		foreach(GameItem t in itemsCreated) {
+			GameController.main.PushTask( new PickUpItemTask(t.gameObject) );
+		}
+
+		mOnFinishCallback();
 	}
 
 	public override void Cancel() {

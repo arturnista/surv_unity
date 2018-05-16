@@ -42,19 +42,14 @@ public class HUDController : MonoBehaviour {
 
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		// mDebugText.text = "Inventory: \n";
-		// foreach(InventoryItem invItem in mInventory.inventory) {
-		// 	mDebugText.text += "[" + invItem.index + "]: " + invItem.item.name + " ( " + invItem.amount + " )\n";
-		// }
+		mDebugText.text = "";
 		
-		// mDebugText.text += "Tasks: \n";
-		// if(mBehaviour.activeTask != null) mDebugText.text += "[C]: " + mBehaviour.activeTask;
-		// List<Task> tasks = mBehaviour.taskList;
-		// for (int i = 0; i < tasks.Count; i++) {
-		// 	mDebugText.text += " => [" + i + "]: " + tasks[i];
-		// }
+		if(GameController.main.dwarf != null) {
+			mDebugText.text += " Health: " + GameController.main.dwarf.status.health;
+			mDebugText.text += " Hungry: " + GameController.main.dwarf.status.hungry;
+			mDebugText.text += " Fatigue: " + GameController.main.dwarf.status.fatigue;
+		}
 	}
 
 	public void UpdateInventory() {

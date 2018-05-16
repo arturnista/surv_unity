@@ -25,9 +25,12 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		
 		GameItem item = GetComponent<GameItem>();
 		if(item) mTasks.Add( new PickUpItemTask(gameObject) );	
+		
+		GameBuilding building = GetComponent<GameBuilding>();
+		if(building) mTasks.Add( new DeconstructTask(gameObject) );	
 
 		mGameArea = GetComponent<GameArea>();
-		mTasks.Add( new MoveTask(Vector3.zero) );
+		mTasks.Add( new MoveTask(transform.position) );
 		mMoveActionIndex = mTasks.Count - 1;
 
 		mShouldResetQueue = false;
@@ -73,7 +76,7 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 			// If the game area has an active building, must construct it
 			if(GameController.main.activeBuilding != null) {
 				Vector3Int mousePosInt = new Vector3Int(Mathf.RoundToInt(mousePos.x), Mathf.RoundToInt(mousePos.y), 0);
-				Task constructTask = new ConstructBuildingTask(mousePosInt, GameController.main.activeBuilding);
+				Task constructTask = new ConstructTask(mousePosInt, GameController.main.activeBuilding);
 				EnqueueTask(constructTask);
 				return;
 			}

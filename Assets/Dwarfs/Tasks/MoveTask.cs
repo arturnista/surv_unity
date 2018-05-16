@@ -4,6 +4,7 @@ public class MoveTask : Task {
 	
 	public MoveTask(Vector3 position) : base(Task.Action.Move) {
 		this.position = position;
+		this.hardness = 1f;
 	}
 
 	public override string ToString() {
@@ -11,8 +12,7 @@ public class MoveTask : Task {
 	}
 
 	public override string ToStringFormat(bool simple = false) {
-		if(simple) return "Move";
-		else return "Move to " + this.position;
+		return "Move";
 	}
 
 	public override bool Check(DwarfInventory inventory) {
@@ -23,10 +23,10 @@ public class MoveTask : Task {
 
 	}
 
-	public override void Perform(DwarfInventory inventory) {
-
+	public override void Perform(DwarfInventory inventory, System.Action onFinish) {
+		onFinish();
 	}
-
+	
 	public override void Cancel() {
 
 	}

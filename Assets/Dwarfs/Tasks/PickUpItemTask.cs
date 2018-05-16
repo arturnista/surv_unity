@@ -33,9 +33,11 @@ public class PickUpItemTask : Task {
 
 	}
 
-	public override void Perform(DwarfInventory inventory) {
+	public override void Perform(DwarfInventory inventory, System.Action onFinish) {
         Item item = mGameItem.PickUp();
         inventory.AddItem(item, 1);
+
+		onFinish();
 	}
 
 	public override void Cancel() {

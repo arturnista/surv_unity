@@ -81,6 +81,17 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	public void PushTask(Task task) {
+		if(dwarf) {
+			dwarf.EnqueueTask(task);
+		} else {
+			HUDController.main.CreateFloatingText(task.ToStringFormat(), task.position, Color.white);
+			
+			mTaskList.Insert(0, task);
+			task.Start();
+		}
+	}
+
 	public void ClearAndEnqueueTask(Task task) {
 		if(dwarf) {
 			dwarf.ClearAndEnqueueTask(task);

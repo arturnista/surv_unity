@@ -27,4 +27,18 @@ public class GameBuilding : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	public void Deconstruct() {
+
+		foreach(Building.Requirement req in mBuilding.requirements) {
+			for (int i = 0; i < req.amount; i++) {
+				Vector3 pos = transform.position;
+				pos.x += Random.Range(-1f, 1f);
+				pos.y += Random.Range(-1f, 1f);
+				GameItem it = req.item.CreateGameObject(pos);	
+			}
+		}
+
+		Destroy(gameObject);
+	}
 }

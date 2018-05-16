@@ -12,6 +12,11 @@ public class Pathfinder : MonoBehaviour {
 	private Vector2Int mGridSize = new Vector2Int(400, 400);
 	private Dictionary<Vector2Int, Node> mGrid;
 
+	private Vector2 mStartPosAsync;
+	private Vector2 mTargetPosAsync;
+	private bool mFindNeighbour;
+	private Action<List<Node>> mCallbackAsync;
+
 	private int gridTotalSize {
 		get {
 			return mGridSize.x * mGridSize.y;
@@ -35,6 +40,12 @@ public class Pathfinder : MonoBehaviour {
 				mGrid.Add(pos, new Node(x, y, pathfinderMask));
 			}
 		}
+	}
+
+	public List<Node> GetAvailableNeighbours(Vector2 position) {
+		Node n = NodeFromPosition(position);
+		List<Node> nei = FindNeighbours(n);
+		return nei.FindAll(x => x.walkable);
 	}
 
 	Node NodeFromPosition(Vector2 position) {
@@ -153,14 +164,15 @@ public class Pathfinder : MonoBehaviour {
 		return null;
 	}
 
-	Vector2 mStartPosAsync;
-	Vector2 mTargetPosAsync;
-	Action<List<Node>> mCallbackAsync;
-
 	public void FindPathAsync(Vector2 startPos, Vector2 targetPos, Action<List<Node>> callback) {
+		FindPathAsync(startPos, targetPos, false, callback);
+	}
+
+	public void FindPathAsync(Vector2 startPos, Vector2 targetPos, bool neighbour, Action<List<Node>> callback) {
 		mStartPosAsync = startPos;
 		mTargetPosAsync = targetPos;
 		mCallbackAsync = callback;
+		mFindNeighbour = neighbour;
 
 		StartCoroutine(FindPathCoroutine());
 	}
@@ -178,8 +190,7 @@ public class Pathfinder : MonoBehaviour {
 			yield break;
 		}
 		if(!targetNode.walkable) {
-			mCallbackAsync(null);
-			yield break;
+			mFindNeighbour = true;
 		}
 		// Add the first node to the set
 		Heap<Node> openSet = new Heap<Node>(gridTotalSize);
@@ -206,6 +217,12 @@ public class Pathfinder : MonoBehaviour {
 			List<Node> neighbours = FindNeighbours(currentNode);
 			foreach (Node neighbour in neighbours) {
 
+				if(mFindNeighbour && neighbour == targetNode) {
+					List<Node> path = ReversePath(startNode, currentNode);
+					mCallbackAsync(path);
+					yield break;
+				}
+
 				if(!neighbour.walkable || closedSet.Contains(neighbour)) continue;
 				
 				int newCost = currentNode.gCost + GetDistance(currentNode, neighbour);
@@ -221,6 +238,7 @@ public class Pathfinder : MonoBehaviour {
 					}
 				}
 			}	
+
 			if(Time.time - lastTime > .05f) {
 				lastTime = Time.time;
 				yield return null;

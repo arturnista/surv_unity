@@ -18,6 +18,7 @@ MonoBehaviour:
   prefab: {fileID: 1234430175329752, guid: 1404a26a8d72b406e80d5e618b0bb88f, type: 2}
   ghostPrefab: {fileID: 1234430175329752, guid: 7c7728ddee331473cbeeb4431f29256a,
     type: 2}
+  actions: 00000000
   requirements:
   - item: {fileID: 11400000, guid: ae5d4a07146b04201bc37a5f4874ff3b, type: 2}
     amount: 1

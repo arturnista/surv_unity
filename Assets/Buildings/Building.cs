@@ -12,6 +12,11 @@ public class Building : ScriptableObject {
 	public GameObject prefab;
 	public GameObject ghostPrefab;
 	[System.Serializable]
+	public enum BuildingAction {
+		Sleep
+	}
+	public List<BuildingAction> actions;
+	[System.Serializable]
 	public struct Requirement {
 		public Item item;
 		public int amount;

@@ -17,14 +17,18 @@ public class Tree : MonoBehaviour {
 		
 	}
 
-	public void Cut() {
+	public List<GameItem> Cut() {
+		List<GameItem> ret = new List<GameItem>();
 		for (int i = 0; i < mLogCount; i++) {
 			Vector3 pos = transform.position;
 			pos.x += Random.Range(-1f, 1f);
 			pos.y += Random.Range(-1f, 1f);
-			mWoodLog.CreateGameObject(pos, Quaternion.identity);	
+			GameItem it = mWoodLog.CreateGameObject(pos, Quaternion.identity);	
+			ret.Add(it);
 		}
 
 		Destroy(gameObject);
+
+		return ret;
 	}
 }

@@ -38,27 +38,17 @@ public class SleepTask : Task {
 		base.Perform(inventory, onFinish);
 
 		mDwarfStatus = inventory.GetComponent<DwarfStatus>();
-		mDwarfStatus.StartSleep();
-		mDwarfStatus.transform.position = target.transform.position;
+		mDwarfStatus.StartSleep(mBed);
 
-		// mDwarfInventory.Invoke("FinishPerfom", .3f);
-		mDwarfInventory.StartCoroutine(Example());
-
-		// System.Threading.Thread.Sleep(1000);
-		
-		// FinishPerform();
+		mDwarfInventory.StartCoroutine(FinishPerform());
 	}
 
-    IEnumerator Example() {
-		Debug.Log("Começou");
+	protected override IEnumerator FinishPerform() {
+		mDwarfStatus.transform.position = target.transform.position;
+
         yield return new WaitForSeconds(5);
-		FinishPerform();
-		Debug.Log("Terminou");
-    }
 
-	protected override void FinishPerform() {
 		mDwarfStatus.transform.position = Pathfinder.main.GetAvailableNeighbours(mDwarfStatus.transform.position)[0].worldPosition;
-
 		mDwarfStatus.StopSleep();
 		mOnFinishCallback();
 	}

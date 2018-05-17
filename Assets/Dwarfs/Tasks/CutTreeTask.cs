@@ -39,10 +39,12 @@ public class CutTreeTask : Task {
 		base.Perform(inventory, onFinish);
 		this.hardness = 2f;
 
-		FinishPerform();
+		inventory.StartCoroutine(FinishPerform());
 	}
 	
-	protected override void FinishPerform() {
+	protected override IEnumerator FinishPerform() {
+        yield return new WaitForSeconds(mTree.cutTime);
+
 		List<GameItem> itemsCreated = mTree.Cut();
 		foreach(GameItem t in itemsCreated) {
 			GameController.main.PushTask( new PickUpItemTask(t.gameObject) );

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour {
 
+	public float cutTime = 2f;
+
 	[SerializeField]
 	private Item mWoodLog;
 	private int mLogCount = 10;

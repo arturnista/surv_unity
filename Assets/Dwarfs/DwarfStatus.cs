@@ -24,6 +24,16 @@ public class DwarfStatus : MonoBehaviour {
 
 	private float mIdleHardness;
 	private bool mIsSleeping;
+	private float mLastCheckSleep;
+	private Bed mBed;
+	public Bed bed {
+		get {
+			return mBed;
+		}
+		set {
+			mBed = value;
+		}
+	}
 
 	private DwarfBehaviour mBehaviour;
 
@@ -47,6 +57,12 @@ public class DwarfStatus : MonoBehaviour {
 		} else {
 			mFatigue -= mIdleHardness * Time.deltaTime;
 		}
+
+		if(mFatigue < 10f) {
+			Task t = mBehaviour.taskList.Find(x => x.action == Task.Action.Sleep);
+			if(t == null) mBehaviour.EnqueueTask( new SleepTask(mBed.gameObject) );
+			mLastCheckSleep = Time.time;
+		}
 		
 		if(mBehaviour.activeTask != null) {
 			mHungry -= mBehaviour.activeTask.hardness * Time.deltaTime;
@@ -56,7 +72,8 @@ public class DwarfStatus : MonoBehaviour {
 
 	}
 
-	public void StartSleep() {
+	public void StartSleep(Bed bed) {
+		mBed = bed;
 		mIsSleeping = true;
 	}
 

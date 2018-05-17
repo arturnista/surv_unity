@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ConstructTask : Task {
@@ -38,11 +39,12 @@ public class ConstructTask : Task {
 		base.Perform(inventory, onFinish);
 		this.hardness = 3f;
 		
-		// Invoke("FinishPerfom", this.building.buildTime);
-		FinishPerform();
+		inventory.StartCoroutine(FinishPerform());
 	}
 	
-	protected override void FinishPerform() {
+	protected override IEnumerator FinishPerform() {
+        yield return new WaitForSeconds(this.building.buildTime);
+		
         building.DestroyGhost(mBuildingGhost);
         building.CreateGameObject(position);
         foreach(Building.Requirement req in building.requirements) {

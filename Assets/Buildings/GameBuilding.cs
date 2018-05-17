@@ -7,6 +7,12 @@ public class GameBuilding : MonoBehaviour {
 	private Building mBuilding;
 	private SpriteRenderer mSpriteRenderer;
 
+	public Building building {
+		get {
+			return mBuilding;
+		}	
+	}
+
 	void Awake () {
 		mSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		General.GroupGameObjects(transform, "Buildings");

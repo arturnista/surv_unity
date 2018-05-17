@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class DeconstructTask : Task {
 
+	public Building building;
 	protected GameBuilding mGameBuilding;
 	
 	public DeconstructTask(GameObject gameBuilding) : base(Task.Action.Deconstruct) {
 		this.position = gameBuilding.transform.position;
 		this.mGameBuilding = gameBuilding.GetComponent<GameBuilding>();
+		this.building = this.mGameBuilding.building;
 	}
 
 	public override string ToString() {
@@ -30,11 +33,12 @@ public class DeconstructTask : Task {
 		base.Perform(inventory, onFinish);
 		this.hardness = 3f;
 		
-		// Invoke("FinishPerfom", this.building.buildTime);
-		FinishPerform();
+		inventory.StartCoroutine(FinishPerform());
 	}
 	
-	protected override void FinishPerform() {
+	protected override IEnumerator FinishPerform() {
+        yield return new WaitForSeconds(this.building.buildTime);
+
 		mGameBuilding.Deconstruct();
 		mOnFinishCallback();
 	}

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Task {
@@ -52,8 +53,8 @@ public class Task {
 		mOnFinishCallback = onFinish;
 	}
 
-	protected virtual void FinishPerform() {
-
+	protected virtual IEnumerator FinishPerform() {
+		yield return null;
 	}
 
 	public virtual void Cancel() {

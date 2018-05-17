@@ -21,10 +21,13 @@ public class DwarfStatus : MonoBehaviour {
 	public float fatigue {
 		get { return mFatigue; }
 	}
+	public float fatiguePerc {
+		get { return mFatigue / maxFatigue; }
+	}
 
 	private float mIdleHardness;
 	private bool mIsSleeping;
-	private float mLastCheckSleep;
+	private bool mAlreadyEnqueueSleepTask;
 	private Bed mBed;
 	public Bed bed {
 		get {
@@ -49,19 +52,22 @@ public class DwarfStatus : MonoBehaviour {
 	}
 	
 	void Update () {
-		
 		if(mIsSleeping) {
-			mFatigue += mIdleHardness * Time.deltaTime;			
+			mFatigue += mBed.restness * Time.deltaTime;			
 		} else if(mBehaviour.activeTask != null) {
 			mFatigue -= mBehaviour.activeTask.hardness * Time.deltaTime;
 		} else {
 			mFatigue -= mIdleHardness * Time.deltaTime;
 		}
 
-		if(mFatigue < 10f) {
-			Task t = mBehaviour.taskList.Find(x => x.action == Task.Action.Sleep);
-			if(t == null) mBehaviour.EnqueueTask( new SleepTask(mBed.gameObject) );
-			mLastCheckSleep = Time.time;
+		if(mBed && fatiguePerc < .1f) {
+			if(!mAlreadyEnqueueSleepTask) {
+				Task t = mBehaviour.taskList.Find(x => x.action == Task.Action.Sleep);
+				if(t == null) mBehaviour.EnqueueTask( new SleepTask(mBed.gameObject) );
+				mAlreadyEnqueueSleepTask = true;			
+			}
+		} else {
+			mAlreadyEnqueueSleepTask = false;			
 		}
 		
 		if(mBehaviour.activeTask != null) {

@@ -10,6 +10,7 @@ public class DeconstructTask : Task {
 		this.position = gameBuilding.transform.position;
 		this.mGameBuilding = gameBuilding.GetComponent<GameBuilding>();
 		this.building = this.mGameBuilding.building;
+		Debug.Log( this.building );
 	}
 
 	public override string ToString() {

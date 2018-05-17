@@ -46,7 +46,9 @@ public class SleepTask : Task {
 	protected override IEnumerator FinishPerform() {
 		mDwarfStatus.transform.position = target.transform.position;
 
-        yield return new WaitForSeconds(5);
+		while(mDwarfStatus.fatiguePerc < 0.9f) {
+	        yield return new WaitForSeconds(1f);
+		}
 
 		mDwarfStatus.transform.position = Pathfinder.main.GetAvailableNeighbours(mDwarfStatus.transform.position)[0].worldPosition;
 		mDwarfStatus.StopSleep();

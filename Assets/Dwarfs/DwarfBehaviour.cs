@@ -166,8 +166,10 @@ public class DwarfBehaviour : MonoBehaviour {
 		}
 
 		mIsPerformingAction = true;
-		mCurrentTask.Perform(mInventory, () => mIsPerformingAction = false);
-		mCurrentTask = null;
+		mCurrentTask.Perform(mInventory, () => {
+			mIsPerformingAction = false;
+			mCurrentTask = null;
+		});
 	}
 
 	bool CheckTask(Task task) {

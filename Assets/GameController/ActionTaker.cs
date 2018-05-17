@@ -20,6 +20,11 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		mSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		mTasks = new List<Task>();
 
+		mShouldResetQueue = false;
+	}
+
+	void Start() {
+
 		Tree tree = GetComponent<Tree>();
 		if(tree) mTasks.Add( new CutTreeTask(gameObject) );
 		
@@ -35,8 +40,7 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		mGameArea = GetComponent<GameArea>();
 		mTasks.Add( new MoveTask(transform.position) );
 		mMoveActionIndex = mTasks.Count - 1;
-
-		mShouldResetQueue = false;
+		
 	}
 	
 	void Update () {

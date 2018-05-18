@@ -12,7 +12,7 @@ public class DwarfBehaviour : MonoBehaviour {
 	private DwarfInventory mInventory;
 	private DwarfStatus mStatus;
 
-	private Queue<Task> mTaskQueue;
+	private LinkedList<Task> mTaskQueue;
 	private Task mCurrentTask;
 	private List<Node> mCurrentPath;
 	private bool mIsFindingPath;
@@ -52,7 +52,7 @@ public class DwarfBehaviour : MonoBehaviour {
 	void Awake () {
 		mInventory = GetComponent<DwarfInventory>();
 		mStatus = GetComponent<DwarfStatus>();
-		mTaskQueue = new Queue<Task>();
+		mTaskQueue = new LinkedList<Task>();
 		mTasksBlackList = new List<int>();
 	}
 
@@ -132,7 +132,20 @@ public class DwarfBehaviour : MonoBehaviour {
 
 		HUDController.main.CreateFloatingText(task.ToStringFormat(), task.position, Color.white);
 
-		mTaskQueue.Enqueue(task);
+		mTaskQueue.AddLast(task);
+
+		task.Start();
+	}
+
+	public void PushTask(Task task) {
+		if(!CheckTask(task)) {
+			HUDController.main.CreateFloatingText("Not possible", task.position, Color.red);
+			return;
+		}
+
+		HUDController.main.CreateFloatingText(task.ToStringFormat(), task.position, Color.white);
+
+		mTaskQueue.AddFirst(task);
 
 		task.Start();
 	}
@@ -141,7 +154,7 @@ public class DwarfBehaviour : MonoBehaviour {
 		if(!CheckTask(task)) return;
 
 		ClearTasks();		
-		mTaskQueue.Enqueue(task);
+		mTaskQueue.AddLast(task);
 
 		task.Start();
 	}
@@ -183,7 +196,8 @@ public class DwarfBehaviour : MonoBehaviour {
 	Task GetNextTask(int idx = 0) {
 		Task task;
 		if(mTaskQueue.Count > 0) {
-			task = mTaskQueue.Dequeue();
+			task = mTaskQueue.First.Value;
+			mTaskQueue.RemoveFirst();
 			if(!task.Check(mInventory)) return GetNextTask();
 		} else if (idx < mGameController.taskList.Count) {
 			task = mGameController.taskList[idx];
@@ -203,7 +217,8 @@ public class DwarfBehaviour : MonoBehaviour {
 
 	void ClearTasks() {
 		while(mTaskQueue.Count > 0) {
-			Task task = mTaskQueue.Dequeue();
+			Task task = mTaskQueue.First.Value;
+			mTaskQueue.RemoveFirst();
 			task.Cancel();
 		}
 		if(mCurrentTask != null) mCurrentTask.Cancel();

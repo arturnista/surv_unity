@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f761a497eeaa5420ab7e245a17a59604, type: 3}
+  m_Name: Meat
+  m_EditorClassIdentifier: 
+  name: Meat
+  sprite: {fileID: 21300000, guid: 2f9174c2b66ce459bbeea615dc756768, type: 3}
+  prefab: {fileID: 1499110607724930, guid: b901d1481fdee4e11aaec781322f88a8, type: 2}
+  types: 0000000001000000
+  hungry: 25

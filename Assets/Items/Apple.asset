@@ -8,11 +8,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d43dba819957494fa59c7c9ef8ec30f, type: 3}
+  m_Script: {fileID: 11500000, guid: f761a497eeaa5420ab7e245a17a59604, type: 3}
   m_Name: Apple
   m_EditorClassIdentifier: 
-  id: 2
   name: Apple
   sprite: {fileID: 21300000, guid: 7b0c97ecd0ee344f3a3e693df3fae612, type: 3}
   prefab: {fileID: 1499110607724930, guid: b901d1481fdee4e11aaec781322f88a8, type: 2}
-  type: 0000000001000000
+  types: 0000000001000000
+  hungry: 5

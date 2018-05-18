@@ -24,6 +24,9 @@ public class DwarfStatus : MonoBehaviour {
 	public float fatiguePerc {
 		get { return mFatigue / maxFatigue; }
 	}
+	public float hungryPerc {
+		get { return mHungry / maxHungry; }
+	}
 
 	private float mIdleHardness;
 	private bool mIsSleeping;
@@ -39,9 +42,11 @@ public class DwarfStatus : MonoBehaviour {
 	}
 
 	private DwarfBehaviour mBehaviour;
+	private DwarfInventory mInventory;
 
 	void Awake () {
 		mBehaviour = GetComponent<DwarfBehaviour>();
+		mInventory = GetComponent<DwarfInventory>();
 	}
 
 	void Start () {
@@ -76,6 +81,10 @@ public class DwarfStatus : MonoBehaviour {
 			mHungry -= mIdleHardness * Time.deltaTime;
 		}
 
+		if(hungryPerc < .1f) {
+			ConsumeFood();
+		}
+
 	}
 
 	public void StartSleep(Bed bed) {
@@ -87,5 +96,20 @@ public class DwarfStatus : MonoBehaviour {
 		mIsSleeping = false;
 	}
 
+	public void ConsumeFood() {
+		List<InventoryItem> foods = mInventory.inventory.FindAll(x => x.item.IsType(Item.ItemType.Food) );
+		while(foods.Count > 0 && hungryPerc < .8f) {
+			ItemFood iFood = (ItemFood) foods[0].item;
+			int amountConsumed = 0;
+			for (int i = 0; i < foods[0].amount; i++) {
+				mHungry += iFood.Consume();
+				amountConsumed++;
+				if(hungryPerc >= .8f) break;
+			}
+
+			mInventory.RemoveItem(iFood, amountConsumed);
+			foods.RemoveAt(0);
+		}
+	}
 
 }

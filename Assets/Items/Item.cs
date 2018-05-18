@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Items/Create Item")]
 public class Item : ScriptableObject {
@@ -7,12 +9,12 @@ public class Item : ScriptableObject {
 	public Sprite sprite;
 	public GameObject prefab;
 
-	public enum Type {
+	public enum ItemType {
 		Resource,
 		Food,
 		Weapon
 	}
-	public Type[] type;
+	public List<ItemType> types;
 
 	public GameItem CreateGameObject(Vector3 position) {
 		return CreateGameObject(position, Quaternion.identity);
@@ -24,6 +26,11 @@ public class Item : ScriptableObject {
 		gItem.Configure(this);
 
 		return gItem;
+	}
+
+	public virtual bool IsType(ItemType type) {
+		ItemType t = types.Find(x => x == type);
+		return t == type;
 	}
 
 }

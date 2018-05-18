@@ -198,6 +198,7 @@ public class Pathfinder : MonoBehaviour {
 		openSet.Add(startNode);
 
 		float lastTime;
+		int frames = 0;
 
 		// While open set is not empty
 		while(openSet.Count != 0) {
@@ -239,8 +240,9 @@ public class Pathfinder : MonoBehaviour {
 				}
 			}	
 
-			if(Time.time - lastTime > .05f) {
-				lastTime = Time.time;
+			if(++frames > 500) {
+				// lastTime = Time.time;
+				frames = 0;
 				yield return null;
 			}
 		}

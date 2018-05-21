@@ -8,6 +8,9 @@ public class DwarfSelect : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private GameController mGameController;
 	private DwarfBehaviour mBehaviour;
 	private SpriteRenderer mSelectedSprite;
+	public bool isSelected {
+		get { return mGameController.dwarf == mBehaviour; }
+	}
 
 	void Awake () {
 		mSelectedSprite = transform.Find("SelectedSprite").GetComponent<SpriteRenderer>();
@@ -19,7 +22,7 @@ public class DwarfSelect : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	}
 
 	void Update () {
-		mSelectedSprite.gameObject.SetActive( mGameController.dwarf == mBehaviour );
+		mSelectedSprite.gameObject.SetActive( isSelected );
 	}
 
 	public void OnPointerDown(PointerEventData eventData) {

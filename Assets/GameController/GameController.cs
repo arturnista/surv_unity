@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour {
 			return mCurrentDwarf;
 		}
 		set {
+			if(mCurrentDwarf == value) FocusOnDwarf(mCurrentDwarf);
 			mCurrentDwarf = value;
 			mHUDController.UpdateInventory();
 		}
@@ -110,5 +111,8 @@ public class GameController : MonoBehaviour {
 		mTaskList.Clear();		
 	}
 
+	public void FocusOnDwarf(DwarfBehaviour dwarf) {
+		CameraBehaviour.main.SetPosition(dwarf.transform.position);
+	}
 	
 }

@@ -11,6 +11,7 @@ public class HUDController : MonoBehaviour {
 	public GameObject actionItemPrefab;
 	public GameObject buildingItemPrefab;
 	public GameObject inventoryItemPrefab;
+	public GameObject dwarfItemPrefab;
 	public GameObject floatingTextPrefab;
 
 	public List<Building> buildings;
@@ -21,6 +22,7 @@ public class HUDController : MonoBehaviour {
 	private Canvas mActionCanvas;
 	private Canvas mBuildingCanvas;
 	private Canvas mInventoryCanvas;
+	private Canvas mDwarfsCanvas;
 
 	void Awake () {
 		main = this;
@@ -30,16 +32,25 @@ public class HUDController : MonoBehaviour {
 		mMenuCanvas = transform.Find("MenuCanvas").GetComponent<Canvas>();
 		mBuildingCanvas = mMenuCanvas.transform.Find("BuildingsListCanvas").GetComponent<Canvas>();
 		mInventoryCanvas = mMenuCanvas.transform.Find("InventoryCanvas").GetComponent<Canvas>();
+		mDwarfsCanvas = mMenuCanvas.transform.Find("DwarfsList").GetComponent<Canvas>();
 
 		mDebugText = transform.Find("DebugCanvas/Text").GetComponent<TextMeshProUGUI>();
 		mDebugText.text = "";
 
+	}
+
+	void Start () {
 		foreach (Building build in buildings) {
 			BuildingItemHUD bHUD = Instantiate(buildingItemPrefab, transform.position, Quaternion.identity).GetComponent<BuildingItemHUD>();
 			bHUD.Configure(build);
 			bHUD.transform.SetParent(mBuildingCanvas.transform);
 		}
 
+		foreach (DwarfStatus dwarf in GameObject.FindObjectsOfType<DwarfStatus>()) {
+			DwarfItemHUD dHUD = Instantiate(dwarfItemPrefab, transform.position, Quaternion.identity).GetComponent<DwarfItemHUD>();
+			dHUD.Configure(dwarf);
+			dHUD.transform.SetParent(mDwarfsCanvas.transform);
+		}
 	}
 	
 	void Update () {

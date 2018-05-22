@@ -47,7 +47,8 @@ public class CutTreeTask : Task {
 
 		List<GameItem> itemsCreated = mTree.Cut();
 		foreach(GameItem t in itemsCreated) {
-			GameController.main.PushTask( new PickUpItemTask(t.gameObject) );
+			mDwarfBehaviour.PushTask( new PickUpItemTask(t.gameObject) );
+			// GameController.main.PushTask( new PickUpItemTask(t.gameObject) );
 		}
 
 		mOnFinishCallback();

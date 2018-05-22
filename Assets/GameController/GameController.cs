@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
 	private HUDController mHUDController;
 
 	private List<Task> mTaskList;
+	private List<InventoryItem> mAllInventory;
 
 	private Building mActiveBuilding;
 	public Building activeBuilding {
@@ -69,6 +70,10 @@ public class GameController : MonoBehaviour {
 		foreach(Node n in mCurrentDwarf.path) pos.Add(new Vector3(n.worldPosition.x, n.worldPosition.y, -1f));
 		mPathRenderer.positionCount = pos.Count;
 		mPathRenderer.SetPositions(pos.ToArray());
+	}
+
+	void UpdateInventory() {
+		
 	}
 
 	public void EnqueueTask(Task task) {

@@ -4,7 +4,6 @@ using UnityEngine;
 public class SleepTask : Task {
 
 	private Bed mBed;
-	private DwarfStatus mDwarfStatus;
 
 	public SleepTask(GameObject bed) : base(Task.Action.Sleep) {
 		this.mBed = bed.GetComponent<Bed>();
@@ -27,6 +26,11 @@ public class SleepTask : Task {
             return false;
         }
 
+		if(mBed.isOccupied) {
+            Cancel();
+            return false;
+		}
+
 		return true;
 	}
 
@@ -36,9 +40,9 @@ public class SleepTask : Task {
 
 	public override void Perform(DwarfInventory inventory, System.Action onFinish) {
 		base.Perform(inventory, onFinish);
-
-		mDwarfStatus = inventory.GetComponent<DwarfStatus>();
+		
 		mDwarfStatus.StartSleep(mBed);
+		mBed.StartSleep();
 
 		mDwarfInventory.StartCoroutine(FinishPerform());
 	}
@@ -51,7 +55,10 @@ public class SleepTask : Task {
 		}
 
 		mDwarfStatus.transform.position = Pathfinder.main.GetAvailableNeighbours(mDwarfStatus.transform.position)[0].worldPosition;
+
 		mDwarfStatus.StopSleep();
+		mBed.StopSleep();
+
 		mOnFinishCallback();
 	}
 

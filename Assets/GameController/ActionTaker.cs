@@ -71,6 +71,12 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		if (!EventSystem.current.IsPointerOverGameObject()) return;
 
 		if(Vector3.Distance(eventData.position, mInitialPointerDown) >= 32f) {
+			Vector3 iPos = Camera.main.ScreenToWorldPoint(mInitialPointerDown);
+			Vector3 fPos = Camera.main.ScreenToWorldPoint(eventData.position);
+			Collider2D[] colls = Physics2D.OverlapAreaAll(iPos, fPos, 1 << LayerMask.NameToLayer("Item"));
+			foreach(Collider2D c in colls) {
+				EnqueueTask( new PickUpItemTask(c.gameObject) );	
+			}
 			return;
 		}
 

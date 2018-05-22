@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DeconstructTask : Task {
@@ -10,7 +11,6 @@ public class DeconstructTask : Task {
 		this.position = gameBuilding.transform.position;
 		this.mGameBuilding = gameBuilding.GetComponent<GameBuilding>();
 		this.building = this.mGameBuilding.building;
-		Debug.Log( this.building );
 	}
 
 	public override string ToString() {
@@ -40,7 +40,11 @@ public class DeconstructTask : Task {
 	protected override IEnumerator FinishPerform() {
         yield return new WaitForSeconds(this.building.buildTime);
 
-		mGameBuilding.Deconstruct();
+		List<GameItem> itemsCreated = mGameBuilding.Deconstruct();
+		foreach(GameItem t in itemsCreated) {
+			mDwarfBehaviour.PushTask( new PickUpItemTask(t.gameObject) );
+			// GameController.main.PushTask( new PickUpItemTask(t.gameObject) );
+		}
 		mOnFinishCallback();
 	}
 

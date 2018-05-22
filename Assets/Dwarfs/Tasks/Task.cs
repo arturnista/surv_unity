@@ -21,6 +21,8 @@ public class Task {
 	public Action action;
 	protected System.Action mOnFinishCallback;
 	protected DwarfInventory mDwarfInventory;
+	protected DwarfStatus mDwarfStatus;
+	protected DwarfBehaviour mDwarfBehaviour;
 
 	void CreateID() {
 		id = iLastID++;
@@ -50,6 +52,8 @@ public class Task {
 
 	public virtual void Perform(DwarfInventory inventory, System.Action onFinish) {
 		mDwarfInventory = inventory;
+		mDwarfStatus = inventory.GetComponent<DwarfStatus>();
+		mDwarfBehaviour = inventory.GetComponent<DwarfBehaviour>();
 		mOnFinishCallback = onFinish;
 	}
 

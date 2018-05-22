@@ -22,13 +22,25 @@ public class DwarfStatus : MonoBehaviour {
 		get { return mFatigue; }
 	}
 	public float healthPerc {
-		get { return mHealth / maxHealth; }
+		get {
+			float perc = mHealth / maxHealth;
+			if(perc < 0) return 0;
+			return perc;
+		}
 	}
 	public float fatiguePerc {
-		get { return mFatigue / maxFatigue; }
+		get {
+			float perc = mFatigue / maxFatigue;
+			if(perc < 0) return 0;
+			return perc;
+		}
 	}
 	public float hungryPerc {
-		get { return mHungry / maxHungry; }
+		get {
+			float perc = mHungry / maxHungry;
+			if(perc < 0) return 0;
+			return perc;
+		}
 	}
 	public string dwarfName {
 		get { return "Dwarf name"; }

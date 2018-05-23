@@ -4,9 +4,11 @@ using UnityEngine;
 public class SleepTask : Task {
 
 	private Bed mBed;
+	private GameBuilding mBuilding;
 
 	public SleepTask(GameObject bed) : base(Task.Action.Sleep) {
 		this.mBed = bed.GetComponent<Bed>();
+		this.mBuilding = bed.GetComponent<GameBuilding>();
 		this.target = bed;
 		this.position = target.transform.position;
 	}		
@@ -54,7 +56,7 @@ public class SleepTask : Task {
 	        yield return new WaitForSeconds(1f);
 		}
 
-		mDwarfStatus.transform.position = Pathfinder.main.GetAvailableNeighbours(mDwarfStatus.transform.position)[0].worldPosition;
+		mDwarfStatus.transform.position = Pathfinder.main.GetAvailableNeighbours(mDwarfStatus.transform.position, mBuilding.building.size)[0].worldPosition;
 
 		mDwarfStatus.StopSleep();
 		mBed.StopSleep();

@@ -42,9 +42,13 @@ public class Pathfinder : MonoBehaviour {
 		}
 	}
 
-	public List<Node> GetAvailableNeighbours(Vector2 position) {
+	public List<Node> GetAvailableNeighbours(Vector2 position, Vector2 offset) {
+		return GetAvailableNeighbours(position, General.ToVector2Int(offset));
+	}
+
+	public List<Node> GetAvailableNeighbours(Vector2 position, Vector2Int offset) {
 		Node n = NodeFromPosition(position);
-		List<Node> nei = FindNeighbours(n);
+		List<Node> nei = FindNeighbours(n, offset);
 		return nei.FindAll(x => x.walkable);
 	}
 
@@ -53,13 +57,26 @@ public class Pathfinder : MonoBehaviour {
 	}
 
 	List<Node> FindNeighbours(Node node) {
+		return FindNeighbours(node, Vector2Int.one);
+	}
+
+	List<Node> FindNeighbours(Node node, Vector2Int offset) {
+		// Testar saporra
+		Vector2Int halfOffset = new Vector2Int(
+			Mathf.RoundToInt(offset.x),
+			Mathf.RoundToInt(offset.y)
+		);
 		List<Node> neighbours = new List<Node>();
-		for (int x = -node.size.x; x <= node.size.x; x += node.size.x) {
-			for (int y = -node.size.y; y <= node.size.y; y += node.size.y) {
+		for (int x = -1 * halfOffset.y; x <= 1 * halfOffset.y; x += 1) {
+			for (int y = -1 * halfOffset.x; y <= 1 * halfOffset.x; y += 1) {
 				if(x == 0 && y == 0) continue;
 
-				Vector2Int p = new Vector2Int(node.position.x + x, node.position.y + y);
+				Vector2Int p = new Vector2Int(
+					node.position.x + (x * offset.x),
+					node.position.y + (y * offset.y)
+				);
 
+				Debug.DrawLine(node.worldPosition, General.ToVector3(p), Color.red, 2f);
 				if(mGrid.ContainsKey(p)) neighbours.Add(mGrid[p]);
 			}	
 		}

@@ -90,7 +90,7 @@ public class DwarfBehaviour : MonoBehaviour {
 		}
 		
 		if(mCurrentPath == null) {
-			mCurrentTask = null;
+			CancelTask();
 			return;
 		}
 		if(mCurrentPath.Count == 0) {
@@ -104,8 +104,8 @@ public class DwarfBehaviour : MonoBehaviour {
 			HUDController.main.CreateFloatingText("Not possible to " + mCurrentTask.ToStringFormat(), mCurrentTask.position, Color.red);
 			mCurrentTask.Cancel();
 
-			mCurrentTask = null;
 			mCurrentPath = null;
+			CancelTask();
 
 			return;
 		}
@@ -116,8 +116,8 @@ public class DwarfBehaviour : MonoBehaviour {
 		}
 	}
 
-	bool SideStep() {
-		List<Node> nodes = Pathfinder.main.GetAvailableNeighbours(transform.position);
+	bool SideStep(Vector2 offset) {
+		List<Node> nodes = Pathfinder.main.GetAvailableNeighbours(transform.position, offset);
 		if(nodes.Count == 0) return false;
 
 		transform.position = nodes[0].worldPosition;
@@ -161,21 +161,17 @@ public class DwarfBehaviour : MonoBehaviour {
 
 	void PerformTask() {
 		if(!CheckTask(mCurrentTask)) {
-			mCurrentTask.Cancel();
-			mCurrentTask = null;
+			CancelTask();
 			return;
 		}
 		if(Vector2.Distance(transform.position, mCurrentTask.position) > 1.5f) {
-			mCurrentTask.Cancel();
-			mCurrentTask = null;
+			CancelTask();
 			return;
 		}
 
 		if(mCurrentTask.action == Task.Action.Construct) {
-			if(!SideStep()) {
-				mCurrentTask.Cancel();
-				mCurrentTask = null;
-			}
+			ConstructTask bTask = (ConstructTask) mCurrentTask;
+			if(!SideStep(bTask.building.size)) CancelTask();
 		}
 
 		mIsPerformingAction = true;
@@ -213,6 +209,11 @@ public class DwarfBehaviour : MonoBehaviour {
 		}
 
 		return task;
+	}
+
+	void CancelTask() {
+		mCurrentTask.Cancel();		
+		mCurrentTask = null;
 	}
 
 	void ClearTasks() {

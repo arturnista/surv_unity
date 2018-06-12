@@ -13,6 +13,7 @@ public class HUDController : MonoBehaviour {
 	public GameObject inventoryItemPrefab;
 	public GameObject dwarfItemPrefab;
 	public GameObject floatingTextPrefab;
+	public GameObject selectPrefab;
 
 	public List<Building> buildings;
 
@@ -24,6 +25,11 @@ public class HUDController : MonoBehaviour {
 	private Canvas mInventoryCanvas;
 	private Canvas mDwarfsCanvas;
 
+	private GameObject mSelectSprite;
+
+	private Vector3 mSelectInitial;
+	private bool mIsSelecting;
+
 	void Awake () {
 		main = this;
 
@@ -33,6 +39,9 @@ public class HUDController : MonoBehaviour {
 		mBuildingCanvas = mMenuCanvas.transform.Find("BuildingsListCanvas").GetComponent<Canvas>();
 		mInventoryCanvas = mMenuCanvas.transform.Find("InventoryCanvas").GetComponent<Canvas>();
 		mDwarfsCanvas = mMenuCanvas.transform.Find("DwarfsList").GetComponent<Canvas>();
+		
+		mSelectSprite = Instantiate(selectPrefab);
+		mSelectSprite.SetActive(false);
 
 		mDebugText = transform.Find("DebugCanvas/Text").GetComponent<TextMeshProUGUI>();
 		mDebugText.text = "";
@@ -60,6 +69,14 @@ public class HUDController : MonoBehaviour {
 			mDebugText.text += " Health: " + Mathf.Round( GameController.main.dwarf.status.health );
 			mDebugText.text += " Hungry: " + Mathf.Round( GameController.main.dwarf.status.hungry );
 			mDebugText.text += " Fatigue: " + Mathf.Round( GameController.main.dwarf.status.fatigue );
+		}
+
+		if(mIsSelecting) {
+			Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			float xDiff = pos.x - mSelectInitial.x;
+			float yDiff = pos.y - mSelectInitial.y;
+			mSelectSprite.transform.localScale = new Vector3(xDiff, yDiff, 1f);
+			mSelectSprite.transform.position = new Vector3(mSelectInitial.x + (xDiff / 2), mSelectInitial.y + (yDiff / 2), 0f);
 		}
 	}
 
@@ -150,4 +167,17 @@ public class HUDController : MonoBehaviour {
 		ft.Configure(text, color);
 		ft.transform.position = position;
 	}
+
+
+	public void StartSelecting() {
+		mSelectInitial = Camera.main.ScreenToWorldPoint(Input.mousePosition);	
+		mIsSelecting = true;
+		mSelectSprite.SetActive(mIsSelecting);
+	}
+
+	public void StopSelecting() {
+		mIsSelecting = false;
+		mSelectSprite.SetActive(mIsSelecting);
+	}
+
 }

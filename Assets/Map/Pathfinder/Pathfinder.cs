@@ -76,7 +76,7 @@ public class Pathfinder : MonoBehaviour {
 					node.position.y + (y * offset.y)
 				);
 
-				Debug.DrawLine(node.worldPosition, General.ToVector3(p), Color.red, 2f);
+				// Debug.DrawLine(node.worldPosition, General.ToVector3(p), Color.red, 2f);
 				if(mGrid.ContainsKey(p)) neighbours.Add(mGrid[p]);
 			}	
 		}
@@ -151,33 +151,6 @@ public class Pathfinder : MonoBehaviour {
 
 		}
 
-		// Add
-		// Heap<Node> openSetReversed = new Heap<Node>(gridTotalSize);
-		// HashSet<Node> closedSetReversed = new HashSet<Node>();
-		// openSetReversed.Add(targetNode);
-
-		// while(openSet.Count != 0 && openSetReversed.Count != 0) {
-		// 	UnityEditor.EditorApplication.isPaused = true;
-		// 	Node node = FindNode(targetNode, openSet, closedSet);
-
-		// 	Node nodeRev = FindNode(startNode, openSetReversed, closedSetReversed);
-
-		// 	if(openSetReversed.Contains(node)) {
-		// 		Debug.Log("ACHOU");
-		// 		return null;
-		// 	} else if(openSet.Contains(nodeRev)) {
-		// 		Debug.Log("ACHOU");
-		// 		return null;
-		// 	} else if(node == targetNode) {
-		// 		Debug.Log("ACHOU");
-		// 		return null;
-		// 	} else if(nodeRev == startNode) {
-		// 		Debug.Log("ACHOU");
-		// 		return null;
-		// 	}
-		// }
-
-		Debug.Log("NAO ACHOU");
 		return null;
 	}
 

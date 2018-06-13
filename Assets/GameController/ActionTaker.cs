@@ -11,7 +11,11 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	private List<Task> mTasks;
 	private int mMoveActionIndex;
 
+	private Vector3 mLastPosition;
+
 	private Vector3 mInitialPointerDown;
+	private bool mIsSelecting;
+	private List<ActionTaker> mActionsSelected;
 	private bool mIsSelected;
 
 	private bool mShouldResetQueue;
@@ -25,6 +29,7 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	void Awake () {
 		mSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
 		mTasks = new List<Task>();
+		mActionsSelected = new List<ActionTaker>();
 
 		mShouldResetQueue = false;
 	}
@@ -55,6 +60,22 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 		} else if(Input.GetKeyUp(KeyCode.LeftShift)) {
 			mShouldResetQueue = false;
 		}
+		Vector3 fPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		if(mIsSelecting && mLastPosition != fPos) {
+			mLastPosition = fPos;
+			foreach(ActionTaker a in mActionsSelected) a.Deselect();
+			mActionsSelected.Clear();
+
+			Vector3 iPos = Camera.main.ScreenToWorldPoint(mInitialPointerDown);
+			Collider2D[] colls = Physics2D.OverlapAreaAll(iPos, fPos);
+			foreach(Collider2D c in colls) {
+				ActionTaker action = c.GetComponent<ActionTaker>();
+				if(action && action != this && !mActionsSelected.Contains(action)) {
+					mActionsSelected.Add(action);
+					action.Select();
+				}
+			}
+		}
 	}
 
 	void Select() {
@@ -72,12 +93,17 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 		mInitialPointerDown = eventData.position;
 		HUDController.main.StartSelecting();
+		mIsSelecting = true;
 	}
 
     public void OnPointerUp(PointerEventData eventData) {
 		if (!EventSystem.current.IsPointerOverGameObject()) return;
 
 		HUDController.main.StopSelecting();
+		mIsSelecting = false;
+		foreach(ActionTaker a in mActionsSelected) a.Deselect();
+		mActionsSelected.Clear();
+
 		if(Vector3.Distance(eventData.position, mInitialPointerDown) >= 32f) {
 			Vector3 iPos = Camera.main.ScreenToWorldPoint(mInitialPointerDown);
 			Vector3 fPos = Camera.main.ScreenToWorldPoint(eventData.position);

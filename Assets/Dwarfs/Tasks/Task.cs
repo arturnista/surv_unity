@@ -5,7 +5,7 @@ public class Task {
 	public enum Action {
 		None,
 		Move,
-		CutTree,
+        ResourceGather,
 		PickUpItem,
 		Construct,
 		Deconstruct,

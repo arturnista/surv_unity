@@ -19,11 +19,13 @@ public class GameArea : MonoBehaviour {
 	}
 
 	void Start () {
-		float vSize = Camera.main.orthographicSize * 2f;
-		float hSize = Camera.main.aspect * vSize;
-		mGameAreaCollider.size = new Vector2(hSize, vSize);
+		UpdateGameArea();
 	}
 
-	
+	public void UpdateGameArea() {
+        float vSize = Camera.main.orthographicSize * 2f;
+        float hSize = Camera.main.aspect * vSize;
+        mGameAreaCollider.size = new Vector2(hSize, vSize);
+	}
 
 }

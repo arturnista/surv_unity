@@ -6,13 +6,14 @@ public class PathfinderObstacle : MonoBehaviour {
 
 	public bool isStatic = true;
 
-	private Vector2Int mPosition;
-	private Transform mPathfinderCollider;
+	protected Vector2Int mPosition;
+	protected Transform mPathfinderCollider;
 
-	void Awake () {
+	protected virtual void Awake () {
 		mPosition = General.ToVector2Int(transform.position);
-		mPathfinderCollider = transform.Find("Collider");
-	}
+		if(mPathfinderCollider == null) mPathfinderCollider = transform.Find("Collider");
+        mPathfinderCollider.gameObject.layer = LayerMask.NameToLayer("PathFinderCollider");
+    }
 
 	void Update() {
 		if(!isStatic) return;

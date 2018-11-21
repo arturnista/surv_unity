@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tree : MonoBehaviour {
+public class ResourceGather : MonoBehaviour {
+	
+	public float gatherTime = 2f;
+    public string resourceAction = "Cut tree";
 
-	public float cutTime = 2f;
-
+    [SerializeField]
+	private Item mItem;
 	[SerializeField]
-	private Item mWoodLog;
-	private int mLogCount = 10;
+	private int mItemCount = 10;
 
 	void Start () {
 		
@@ -19,13 +21,13 @@ public class Tree : MonoBehaviour {
 		
 	}
 
-	public List<GameItem> Cut() {
+	public List<GameItem> Gather() {
 		List<GameItem> ret = new List<GameItem>();
-		for (int i = 0; i < mLogCount; i++) {
+		for (int i = 0; i < mItemCount; i++) {
 			Vector3 pos = transform.position;
 			pos.x += Random.Range(-1f, 1f);
 			pos.y += Random.Range(-1f, 1f);
-			GameItem it = mWoodLog.CreateGameObject(pos, Quaternion.identity);	
+			GameItem it = mItem.CreateGameObject(pos, Quaternion.identity);	
 			ret.Add(it);
 		}
 
@@ -33,4 +35,5 @@ public class Tree : MonoBehaviour {
 
 		return ret;
 	}
+
 }

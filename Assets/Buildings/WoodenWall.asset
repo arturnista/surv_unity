@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -13,11 +13,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Wooden Wall
   size: {x: 1, y: 1}
-  sprite: {fileID: 21300000, guid: e84ad74e874b149678d14c819fa962c4, type: 3}
+  sprite: {fileID: 21300002, guid: e84ad74e874b149678d14c819fa962c4, type: 3}
   buildTime: 3
   prefab: {fileID: 1234430175329752, guid: 1404a26a8d72b406e80d5e618b0bb88f, type: 2}
   ghostPrefab: {fileID: 1234430175329752, guid: 7c7728ddee331473cbeeb4431f29256a,
     type: 2}
+  actions: 
   requirements:
   - item: {fileID: 11400000, guid: ae5d4a07146b04201bc37a5f4874ff3b, type: 2}
     amount: 3

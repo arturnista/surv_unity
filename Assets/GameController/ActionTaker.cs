@@ -36,8 +36,8 @@ public class ActionTaker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 	void Start() {
 
-		Tree tree = GetComponent<Tree>();
-		if(tree) mTasks.Add( new CutTreeTask(gameObject) );
+        ResourceGather resource = GetComponent<ResourceGather>();
+		if(resource) mTasks.Add( new ResourceGatherTask(gameObject) );
 		
 		GameItem item = GetComponent<GameItem>();
 		if(item) mTasks.Add( new PickUpItemTask(gameObject) );	

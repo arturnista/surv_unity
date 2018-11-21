@@ -11,10 +11,20 @@ public class PixelPerfectCamera : MonoBehaviour {
 
 	void Awake () {
 		m_Camera = GetComponent<Camera>();
-		DefineCameraSize();
+		UpdateCameraSize();
 	}
 
-	void DefineCameraSize() {
+    public void IncreaseZoom() {
+        m_PPUScale *= 2f;
+        UpdateCameraSize();
+	}
+
+	public void DecreaseZoom() {
+        m_PPUScale /= 2f;
+        UpdateCameraSize();
+	}
+
+	void UpdateCameraSize() {
 		float size = ( m_Camera.pixelHeight / (m_PPUScale * m_PPU) ) * 0.5f;
 		m_Camera.orthographicSize = size;
 	}

@@ -6,10 +6,14 @@ public class CameraBehaviour : MonoBehaviour {
 
 	public static CameraBehaviour main;
 
+	private PixelPerfectCamera pixelPerfect;
+	private GameArea gameArea;
 	public float moveSpeed;
 	
 	void Awake () {
 		main = this;
+        pixelPerfect = GetComponent<PixelPerfectCamera>();
+        gameArea = GetComponentInChildren<GameArea>();
 	}
 	
 	void Update () {
@@ -23,6 +27,14 @@ public class CameraBehaviour : MonoBehaviour {
 			transform.Translate(moveSpeed * Vector3.right * Time.deltaTime);
 		} else if(Input.GetKey(KeyCode.A)) {
 			transform.Translate(moveSpeed * Vector3.left * Time.deltaTime);
+		}
+
+		if(Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus)) {
+			pixelPerfect.IncreaseZoom();
+			gameArea.UpdateGameArea();
+		} else if(Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus)) {
+			pixelPerfect.DecreaseZoom();
+			gameArea.UpdateGameArea();
 		}
 	}
 

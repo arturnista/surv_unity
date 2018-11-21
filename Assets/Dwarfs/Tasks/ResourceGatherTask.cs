@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CutTreeTask : Task {
+public class ResourceGatherTask : Task {
 
-	private Tree mTree;
+	private ResourceGather mResource;
 	
-	public CutTreeTask(GameObject target) : base(Task.Action.CutTree) {
+	public ResourceGatherTask(GameObject target) : base(Task.Action.ResourceGather) {
 		this.target = target;
 		this.position = target.transform.position;
 		this.hardness = 1f;
 
-		mTree = target.GetComponent<Tree>();
+        mResource = target.GetComponent<ResourceGather>();
 	}
 
 	public override string ToString() {
-		return "CutTree :: " + target.name + " :: " + this.position;
+		return mResource.resourceAction + " :: " + target.name + " :: " + this.position;
 	}
 
 	public override string ToStringFormat(bool simple = false) {
-		return "Cut tree";
+		return mResource.resourceAction;
 	}
 
 	public override bool Check(DwarfInventory inventory) {
@@ -43,9 +43,9 @@ public class CutTreeTask : Task {
 	}
 	
 	protected override IEnumerator FinishPerform() {
-        yield return new WaitForSeconds(mTree.cutTime);
+        yield return new WaitForSeconds(mResource.gatherTime);
 
-		List<GameItem> itemsCreated = mTree.Cut();
+		List<GameItem> itemsCreated = mResource.Gather();
 		foreach(GameItem t in itemsCreated) {
 			mDwarfBehaviour.PushTask( new PickUpItemTask(t.gameObject) );
 			// GameController.main.PushTask( new PickUpItemTask(t.gameObject) );

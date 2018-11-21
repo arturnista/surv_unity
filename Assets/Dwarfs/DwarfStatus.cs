@@ -46,9 +46,10 @@ public class DwarfStatus : MonoBehaviour {
 		get { return "Dwarf name"; }
 	}
 
-	private float mIdleHardness;
+	private float mIdleHardness = 1f;
 	private bool mIsSleeping;
 	private bool mAlreadyEnqueueSleepTask;
+    private bool mWaitingForBed;
 	private Bed mBed;
 	public Bed bed {
 		get {
@@ -71,7 +72,7 @@ public class DwarfStatus : MonoBehaviour {
 		mHealth = maxHealth;
 		mHungry = maxHungry;
 		mFatigue = maxFatigue;
-		mIdleHardness = 1f;
+		// mIdleHardness = 1f;
 	}
 	
 	void Update () {
@@ -83,8 +84,17 @@ public class DwarfStatus : MonoBehaviour {
 			mFatigue -= mIdleHardness * Time.deltaTime;
 		}
 
-		if(mBed && fatiguePerc < .1f) {
-			if(!mAlreadyEnqueueSleepTask) {
+		if(fatiguePerc < .1f) {
+			if(!mWaitingForBed && mBed == null) {
+                mBed = GameObject.FindObjectOfType<Bed>();
+				if(mBed == null) {
+                	mWaitingForBed = true;
+					HUDController.main.CreateFloatingText("We need more beds!", Vector3.zero, Color.yellow);
+					EventManager.AddEventListener("OnBedConstruct", HandleBedConstruct);
+				}
+			}
+			if(mBed != null && !mAlreadyEnqueueSleepTask) {
+                mWaitingForBed = false;
 				Task t = mBehaviour.taskList.Find(x => x.action == Task.Action.Sleep);
 				if(t == null) mBehaviour.EnqueueTask( new SleepTask(mBed.gameObject) );
 				mAlreadyEnqueueSleepTask = true;			
@@ -112,6 +122,13 @@ public class DwarfStatus : MonoBehaviour {
 
 	public void StopSleep() {
 		mIsSleeping = false;
+	}
+
+	void HandleBedConstruct() {
+		if(!mWaitingForBed) return;
+
+        mWaitingForBed = false;
+    	EventManager.RemoveEventListener("OnBedConstruct", HandleBedConstruct);
 	}
 
 	public void ConsumeFood() {

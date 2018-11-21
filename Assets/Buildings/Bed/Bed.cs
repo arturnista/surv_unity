@@ -16,7 +16,7 @@ public class Bed : MonoBehaviour {
     }
 
     void Awake () {
-        
+        EventManager.DispatchEvent("OnBedConstruct");
     }
 
     public void StartSleep() {

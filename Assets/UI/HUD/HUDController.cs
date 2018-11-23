@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
 
 public class HUDController : MonoBehaviour {
 
@@ -69,6 +69,9 @@ public class HUDController : MonoBehaviour {
 			mDebugText.text += " Health: " + Mathf.Round( GameController.main.dwarf.status.health );
 			mDebugText.text += " Hungry: " + Mathf.Round( GameController.main.dwarf.status.hungry );
 			mDebugText.text += " Fatigue: " + Mathf.Round( GameController.main.dwarf.status.fatigue );
+			mDebugText.text += " Tasks: " + GameController.main.dwarf.taskList.Count;
+		} else {
+			mDebugText.text += "Tasks: " + GameController.main.taskList.Count;
 		}
 
 		if(mIsSelecting) {

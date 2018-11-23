@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class CameraBehaviour : MonoBehaviour {
 
@@ -30,10 +31,10 @@ public class CameraBehaviour : MonoBehaviour {
 		}
 
 		if(Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.Plus)) {
-			pixelPerfect.IncreaseZoom();
+			pixelPerfect.assetsPPU *= 2;
 			gameArea.UpdateGameArea();
 		} else if(Input.GetKeyDown(KeyCode.KeypadMinus) || Input.GetKeyDown(KeyCode.Minus)) {
-			pixelPerfect.DecreaseZoom();
+			pixelPerfect.assetsPPU /= 2;
 			gameArea.UpdateGameArea();
 		}
 	}

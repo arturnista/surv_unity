@@ -23,7 +23,7 @@ public class GameArea : MonoBehaviour {
 	}
 
 	public void UpdateGameArea() {
-        float vSize = Camera.main.orthographicSize * 2f;
+        float vSize = Camera.main.orthographicSize * 4f;
         float hSize = Camera.main.aspect * vSize;
         mGameAreaCollider.size = new Vector2(hSize, vSize);
 	}

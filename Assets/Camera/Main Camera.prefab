@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 81664166607713682}
   - component: {fileID: 114544434093232754}
   - component: {fileID: 114676565629476132}
-  - component: {fileID: 114536739791576268}
+  - component: {fileID: 114613290549279912}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -101,7 +101,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10.46875
+  orthographic size: 14.0625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -171,18 +171,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71708f584fd4e46799382a2fde882b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114536739791576268
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1370802130870412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 752df51d58d8c40a49c99d0f9ae1072f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PPUScale: 1
 --- !u!114 &114544434093232754
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -198,6 +186,25 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967039
   m_MaxRayIntersections: 0
+--- !u!114 &114613290549279912
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1370802130870412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AssetsPPU: 32
+  m_RefResolutionX: 1600
+  m_RefResolutionY: 900
+  m_UpscaleRT: 0
+  m_PixelSnapping: 0
+  m_CropFrameX: 0
+  m_CropFrameY: 0
+  m_StretchFill: 0
 --- !u!114 &114676565629476132
 MonoBehaviour:
   m_ObjectHideFlags: 1
